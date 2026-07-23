@@ -129,6 +129,7 @@ pipeline {
         stage('Git Push to Github') {
             steps {
                 withCredentials([usernamePassword(credentialsId: GITHUB_CRED, passwordVariable: 'GIT_PW', usernameVariable: 'GIT_ID')]) {
+                    sh """
                         git config user.name "Jenkins-CI"
                         git config user.email "jenkins@cicd.local"
                         git add hello/values.yaml
