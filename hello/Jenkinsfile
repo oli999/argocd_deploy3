@@ -128,8 +128,7 @@ pipeline {
         //  3. Gitea에 수정된 차트 반영 
         stage('Git Push to Github') {
             steps {
-                withCredentials([usernamePassword(credentialsId: AWS_CRED, passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]){
-                    sh """
+                withCredentials([usernamePassword(credentialsId: GITHUB_CRED, passwordVariable: 'GIT_PW', usernameVariable: 'GIT_ID')]) {
                         git config user.name "Jenkins-CI"
                         git config user.email "jenkins@cicd.local"
                         git add hello/values.yaml
@@ -137,7 +136,7 @@ pipeline {
                         # git diff를 통해 변경된 사항이 있을 때만 commit과 push를 수행합니다. 
                         # (변경 사항이 없는데 commit을 시도하면 Jenkins 파이프라인이 실패 처리됩니다.)
                         git diff-index --quiet HEAD || git commit -m "Update image tags to ${IMAGE_TAG} [ci skip]"
-                        git push https://${GIT_ID}:${GIT_PW}@${GITHUB_REPO} HEAD:main
+                        git push https://${GIT_ID}:${GIT_PW}@${GITHUB_REPO} HEAD:master
                     """
                 }
             }
